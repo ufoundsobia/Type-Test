@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Speed Test</title>
+    <link rel="shortcut icon" href="type_test_logo-removebg-preview.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-trigger:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .pattern-dot {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: translateY(-10px) scale(1.1);
+                opacity: 0.6;
+            }
+        }
+    </style>
+</head>
+
+<body class="h-screen overflow-hidden gradient-bg flex items-center justify-center p-4 relative">
+    <!-- Pattern Background -->
+    <div id="pattern-bg" class="fixed inset-0 w-full h-full pointer-events-none z-0"></div>
+
+    <div class="w-full max-w-5xl h-full flex flex-col justify-center relative z-10">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-3 tracking-tight">
+                Typing Speed Test
+            </h1>
+            <p class="text-white/80 text-lg font-medium">Test your typing speed and accuracy</p>
+        </div>
+
+        <!-- Main Container -->
+        <div class="glass-effect rounded-3xl p-8 shadow-2xl h-[70vh] flex flex-col">
+            <!-- Quote Section -->
+            <div class="flex-1 mb-6">
+                <div class="bg-white/10 rounded-2xl p-6 h-full flex items-center border border-white/20">
+                    <div id="quote"
+                        class="text-white text-xl md:text-2xl leading-relaxed font-medium w-full text-center">
+                        <div class="flex items-center justify-center space-x-3">
+                            <div
+                                class="w-6 h-6 border-3 border-white/50 border-t-transparent rounded-full animate-spin">
+                            </div>
+                            <span class="text-white/80">Loading quote...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="mb-6">
+                <textarea id="input" rows="3"
+                    class="w-full p-4 bg-white/20 text-white rounded-2xl border border-white/30 focus:border-white/60 focus:ring-4 focus:ring-white/20 transition-all duration-300 resize-none text-lg font-medium placeholder-white/50 backdrop-blur-sm"
+                    placeholder="Start typing here..."></textarea>
+            </div>
+
+            <!-- Stats and Controls Row -->
+            <div class="flex gap-6 items-end">
+                <!-- Stats -->
+                <div class="flex gap-4 flex-1">
+                    <div
+                        class="bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-6 rounded-2xl text-center flex-1 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                        <div class="flex items-center justify-center mb-2">
+                            <i data-lucide="zap" class="w-5 h-5 mr-2"></i>
+                            <span class="text-blue-100 font-semibold">WPM</span>
+                        </div>
+                        <div id="wpm" class="text-3xl font-bold">0</div>
+                    </div>
+                    <div
+                        class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 rounded-2xl text-center flex-1 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                        <div class="flex items-center justify-center mb-2">
+                            <i data-lucide="target" class="w-5 h-5 mr-2"></i>
+                            <span class="text-emerald-100 font-semibold">Accuracy</span>
+                        </div>
+                        <div id="accuracy" class="text-3xl font-bold">0%</div>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="flex gap-3">
+                    <div class="tooltip-trigger relative">
+                        <button id="restart"
+                            class="bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold p-4 rounded-2xl transition-all duration-200 transform hover:scale-110 focus:ring-4 focus:ring-orange-500/30 shadow-lg group">
+                            <i data-lucide="rotate-ccw"
+                                class="w-6 h-6 group-hover:rotate-180 transition-transform duration-300"></i>
+                        </button>
+                        <div
+                            class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap">
+                            Restart Test
+                            <div
+                                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tooltip-trigger relative">
+                        <button id="newQuote"
+                            class="bg-gradient-to-br from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold p-4 rounded-2xl transition-all duration-200 transform hover:scale-110 focus:ring-4 focus:ring-purple-500/30 shadow-lg group">
+                            <i data-lucide="refresh-cw"
+                                class="w-6 h-6 group-hover:rotate-180 transition-transform duration-300"></i>
+                        </button>
+                        <div
+                            class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap">
+                            New Quote
+                            <div
+                                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6">
+            <p class="text-white/70 text-sm font-medium">Focus on accuracy first, speed will follow naturally</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Create geometric pattern background
+        const patternBg = document.getElementById('pattern-bg');
+
+        function createPattern() {
+            patternBg.innerHTML = '';
+
+            const cols = Math.ceil(window.innerWidth / 80);
+            const rows = Math.ceil(window.innerHeight / 80);
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'absolute w-2 h-2 rounded-full pattern-dot';
+
+                    // Subtle colors that blend with gradient
+                    const colors = ['bg-white/10', 'bg-blue-200/20', 'bg-purple-200/20', 'bg-indigo-200/20'];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+                    dot.classList.add(randomColor);
+                    dot.style.left = `${j * 80 + Math.random() * 30}px`;
+                    dot.style.top = `${i * 80 + Math.random() * 30}px`;
+                    dot.style.animationDelay = `${Math.random() * 6}s`;
+
+                    patternBg.appendChild(dot);
+                }
+            }
+        }
+
+        createPattern();
+        window.addEventListener('resize', createPattern);
+    </script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
